@@ -1,5 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:notekeeper_flutter/database/database_helper.dart';
+import 'package:notekeeper_flutter/models/note.dart';
 import 'package:notekeeper_flutter/screens/note_detail.dart';
+import 'package:sqflite/sqflite.dart';
 
 class NoteList extends StatefulWidget {
   @override
@@ -9,10 +13,17 @@ class NoteList extends StatefulWidget {
 }
 
 class NoteListState extends State<NoteList> {
+  DatabaseHelper databaseHelper = DatabaseHelper();
+  List<Note> noteList;
   int count = 0;
 
   @override
   Widget build(BuildContext context) {
+    if(noteList == null) {
+      noteList = List<Note>();
+      updateListView();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('My notes'),
@@ -22,7 +33,8 @@ class NoteListState extends State<NoteList> {
         tooltip: 'Add note',
         child: Icon(Icons.add),
         onPressed: () {
-          navigateToDetail('Add note');
+          debugPrint('FAB clicked');
+          navigateToDetail(Note('', 2, ''), 'Add note');
         }
       ),
     );
@@ -39,14 +51,20 @@ class NoteListState extends State<NoteList> {
           elevation: 2,
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: Colors.yellow,
-              child: Icon(Icons.keyboard_arrow_right)
+              backgroundColor: getPriorityColor(noteList[position].priority),
+              child: getPriorityIcon(noteList[position].priority)
             ),
-            title: Text('Dummy Title', style: titleStyle),
-            subtitle: Text('Dummy date'),
-            trailing: Icon(Icons.delete, color: Colors.grey),
+            title: Text(noteList[position].title, style: titleStyle),
+            subtitle: Text(noteList[position].date),
+            trailing: GestureDetector(
+              child: Icon(Icons.delete, color: Colors.grey),
+              onTap: () {
+                _delete(context, noteList[position]);
+              },
+            ),
             onTap: () {
-             navigateToDetail('Edit note');
+              debugPrint("ListTile Tapped");
+             navigateToDetail(noteList[position], 'Edit note');
             }
           )
         );
@@ -54,9 +72,80 @@ class NoteListState extends State<NoteList> {
     );
   }
 
-  void navigateToDetail(String title) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return NoteDetail(title);
+  Color getPriorityColor(int priority) {
+    switch(priority) {
+      case 1:
+        return Colors.red;
+        break;
+      case 2:
+        return Colors.yellow;
+        break;
+      default:
+        return Colors.yellow;
+    }
+  }
+
+  Icon getPriorityIcon(int priority) {
+    switch(priority) {
+      case 1:
+        return Icon(Icons.play_arrow);
+        break;
+      case 2:
+        return Icon(Icons.keyboard_arrow_right);
+        break;
+      default:
+        return Icon(Icons.keyboard_arrow_right);
+    }
+  }
+
+  void navigateToDetail(Note note, String title) async {
+    String result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return NoteDetail(note, title);
     }));
+
+    if(result.isNotEmpty) {
+      _showAlertDialog('Status', result);
+      updateListView();
+    }
+  }
+
+  void _delete(BuildContext context, Note note) async {
+    int result = await databaseHelper.deleteNote(note.id);
+
+    if(result != 0) {
+      _showSnackBar(context, 'Note delete successfully');
+      updateListView();
+    }
+  }
+  
+  void _showSnackBar(BuildContext context, String message) {
+    final snackbar = SnackBar(content: Text(message));
+    Scaffold.of(context).showSnackBar(snackbar);
+  }
+
+  void updateListView() {
+    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+
+    dbFuture.then((database) {
+      Future<List<Note>> noteListFuture = databaseHelper.getNoteList();
+      noteListFuture.then((noteList) {
+        setState(() {
+          this.noteList = noteList;
+          this.count = noteList.length;
+        });
+      });
+    });
+  }
+
+  void _showAlertDialog(String title, String message) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text(title),
+      content: Text(message)
+    );
+
+    showDialog(
+      context: context,
+      builder: (_) => alertDialog
+    );
   }
 }
