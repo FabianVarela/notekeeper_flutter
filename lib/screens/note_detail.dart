@@ -121,8 +121,8 @@ class NoteDetailState extends State<NoteDetail> {
               child: Text(
                 widget.appBarTitle,
                 style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
                   color: Theme.of(context).backgroundColor,
                 ),
               ),
@@ -144,13 +144,20 @@ class NoteDetailState extends State<NoteDetail> {
         child: DropdownButton<String>(
           style: TextStyle(
             fontSize: 16,
+            fontWeight: FontWeight.w300,
             color: Theme.of(context).indicatorColor,
           ),
           value: _getPriorityAsString(widget.note.priority),
           items: _priorities.map((String dropDownListItem) {
             return DropdownMenuItem<String>(
               value: dropDownListItem,
-              child: Text(dropDownListItem),
+              child: Text(
+                dropDownListItem,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
             );
           }).toList(),
           onChanged: (String valueSelected) {
@@ -170,12 +177,14 @@ class NoteDetailState extends State<NoteDetail> {
       maxLines: maxLines,
       style: TextStyle(
         fontSize: 16,
+        fontWeight: FontWeight.w400,
         color: Theme.of(context).indicatorColor,
       ),
       decoration: InputDecoration(
         labelText: title,
         labelStyle: TextStyle(
           fontSize: 18,
+          fontWeight: FontWeight.w100,
           color: Theme.of(context).indicatorColor,
         ),
         errorStyle: TextStyle(fontSize: 15),
@@ -196,6 +205,7 @@ class NoteDetailState extends State<NoteDetail> {
         textScaleFactor: 1.5,
         style: TextStyle(
           fontSize: 14,
+          fontWeight: FontWeight.w300,
           color: Theme.of(context).backgroundColor,
         ),
       ),
@@ -261,8 +271,20 @@ class NoteDetailState extends State<NoteDetail> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        content: Text(
+          message,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w100,
+          ),
+        ),
       ),
     );
   }
