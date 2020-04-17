@@ -34,12 +34,7 @@ class NoteListState extends State<NoteList> {
         child: Column(
           children: <Widget>[
             _setHeader(),
-            RefreshIndicator(
-              onRefresh: () async => _updateListView(),
-              child: _noteList.isNotEmpty
-                  ? _createNoteList()
-                  : _createEmptyMessage(),
-            ),
+            _noteList.isNotEmpty ? _createNoteList() : _createEmptyMessage(),
           ],
         ),
       ),
@@ -71,7 +66,7 @@ class NoteListState extends State<NoteList> {
                 'My notes',
                 style: TextStyle(
                   fontSize: 22,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w700,
                   color: Theme.of(context).backgroundColor,
                 ),
               ),
@@ -86,46 +81,45 @@ class NoteListState extends State<NoteList> {
   }
 
   Widget _createEmptyMessage() {
-    return ListView(
-      shrinkWrap: true,
-      children: <Widget>[
-        Container(
-          height: MediaQuery.of(context).size.height * .7,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(bottom: 5),
-                child: Icon(
-                  Icons.lightbulb_outline,
-                  size: 150,
-                ),
-              ),
-              Text(
-                'It\'s alone. Add a note',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).indicatorColor,
-                ),
-              )
-            ],
+    return Container(
+      height: MediaQuery.of(context).size.height * .85,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(bottom: 5),
+            child: Icon(
+              Icons.lightbulb_outline,
+              size: 150,
+            ),
           ),
-        ),
-      ],
+          Text(
+            'It\'s alone. Add a note',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: Theme.of(context).indicatorColor,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _createNoteList() {
-    return Container(
-      height: MediaQuery.of(context).size.height * .85,
-      child: StaggeredGridView.countBuilder(
-        padding: EdgeInsets.zero,
-        crossAxisCount: 4,
-        shrinkWrap: true,
-        itemCount: _noteList.length,
-        itemBuilder: (_, int index) => _createNoteItem(_noteList[index]),
-        staggeredTileBuilder: (int index) => StaggeredTile.fit(2),
+    return RefreshIndicator(
+      key: GlobalKey<RefreshIndicatorState>(),
+      onRefresh: () async => _updateListView(),
+      child: Container(
+        height: MediaQuery.of(context).size.height * .85,
+        child: StaggeredGridView.countBuilder(
+          padding: EdgeInsets.zero,
+          crossAxisCount: 4,
+          shrinkWrap: true,
+          itemCount: _noteList.length,
+          itemBuilder: (_, int index) => _createNoteItem(_noteList[index]),
+          staggeredTileBuilder: (int index) => StaggeredTile.fit(2),
+        ),
       ),
     );
   }
@@ -148,7 +142,7 @@ class NoteListState extends State<NoteList> {
                   note.title,
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w400,
                     color: Colors.white,
                   ),
                 ),
@@ -220,7 +214,13 @@ class NoteListState extends State<NoteList> {
 
   void _showSnackBar(String message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(message),
+      content: Text(
+        message,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
       duration: Duration(seconds: 3),
     ));
   }
@@ -239,7 +239,22 @@ class NoteListState extends State<NoteList> {
   void _showAlertDialog(String title, String message) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(title: Text(title), content: Text(message)),
+      builder: (_) => AlertDialog(
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        content: Text(
+          message,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w100,
+          ),
+        ),
+      ),
     );
   }
 }
