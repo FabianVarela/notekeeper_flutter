@@ -30,7 +30,8 @@ class NoteListState extends State<NoteList> {
     return Scaffold(
       key: _scaffoldKey,
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        physics: NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: Column(
           children: <Widget>[
             _setHeader(),
@@ -38,10 +39,13 @@ class NoteListState extends State<NoteList> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Add note',
-        child: Icon(Icons.add),
-        onPressed: () => _navigateToDetail(Note('', 2, ''), 'Add note'),
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(right: 10),
+        child: FloatingActionButton(
+          tooltip: 'Add note',
+          child: Icon(Icons.add),
+          onPressed: () => _navigateToDetail(Note('', 2, ''), 'Add note'),
+        ),
       ),
     );
   }
