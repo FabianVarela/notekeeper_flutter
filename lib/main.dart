@@ -10,12 +10,16 @@ class NoteKeeperApp extends StatelessWidget {
       title: 'Note Keeper',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        fontFamily: 'Titillium',
         primaryColor: Colors.orange,
         backgroundColor: Colors.white,
         accentColor: Colors.orangeAccent,
         indicatorColor: Colors.blueGrey,
         errorColor: Colors.red,
         iconTheme: IconThemeData(color: Colors.black54),
+        snackBarTheme: SnackBarThemeData(
+          contentTextStyle: TextStyle(color: Colors.white),
+        ),
       ),
       home: NoteList(),
     );
