@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:notekeeper_flutter/screens/note_list.dart';
 
-void main() => runApp(NoteKeeperApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class NoteKeeperApp extends StatelessWidget {
+  await SystemChrome.setPreferredOrientations(
+      <DeviceOrientation>[DeviceOrientation.portraitUp]);
+
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
