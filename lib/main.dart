@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notekeeper_flutter/screens/note_list.dart';
 
 Future<void> main() async {
@@ -23,7 +24,9 @@ class _MyAppState extends State<MyApp> {
       title: 'Note Keeper',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Titillium',
+        textTheme: GoogleFonts.titilliumWebTextTheme(
+          Theme.of(context).textTheme,
+        ),
         primaryColor: Colors.orange,
         backgroundColor: Colors.white,
         accentColor: Colors.orangeAccent,
@@ -31,7 +34,7 @@ class _MyAppState extends State<MyApp> {
         errorColor: Colors.red,
         iconTheme: IconThemeData(color: Colors.black54),
         snackBarTheme: SnackBarThemeData(
-          contentTextStyle: TextStyle(color: Colors.white),
+          contentTextStyle: GoogleFonts.titilliumWeb(),
         ),
       ),
       home: NoteList(),
